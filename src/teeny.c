@@ -46,6 +46,4 @@ int main() {
     CloseWindow();
 
     return 0;
-
-    return 0;
 }
