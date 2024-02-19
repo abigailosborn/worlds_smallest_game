@@ -14,6 +14,7 @@ void wallCollision(Vector3* cubePosition){
             cubePosition->z -= 1;
         }
 }
+
 void movePlayer(Vector3* cubePosition, int velocity, int cubeJumpHeight){
     
         if (IsKeyDown(KEY_D)) cubePosition->x += velocity;
@@ -142,7 +143,9 @@ int main() {
         if(cameraMode == CAMERA_THIRD_PERSON){
             movePlayer(&cubePosition, velocity, cubeJumpHeight);
         }       
-
+        if(cameraMode == CAMERA_FIRST_PERSON){
+            if(IsKeyDown(KEY_SPACE)) camera.position.y += 1.0f;
+        }
         BeginDrawing();
 
             ClearBackground(GetColor(0x2e1038FF));
@@ -156,16 +159,22 @@ int main() {
                 DrawCube((Vector3){16.0f, 2.5f, 0.0f}, 1.0f, 5.0f, 32.0f, PINK);
                 DrawCube((Vector3){0.0f, 2.5f, 16.0f}, 32.0f, 5.0f, 1.0f, YELLOW);
                 DrawCube((Vector3){0.0f, 2.5f, -16.0f}, 32.0f, 5.0f, 1.0f, RED);
+                DrawCube((Vector3){8.0f, 2.5f, -8.0f}, 16.0f, 5.0f, 1.0f, GREEN);
+                DrawCubeWires((Vector3){8.0f, 2.5f, -8.0f}, 16.0f, 5.0f, 1.0f, BLACK);
+                DrawCube((Vector3){-8.0f, 2.5f, 8.0f}, 16.0f, 5.0f, 1.0f, GREEN);
+                DrawCubeWires((Vector3){-8.0f, 2.5f, 8.0f}, 16.0f, 5.0f, 1.0f, BLACK);
+                DrawCylinder((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, GREEN);
+                DrawCylinderWires((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, BLACK);
                 if(cameraMode == CAMERA_THIRD_PERSON){
-                    DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, GREEN);
-                    DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, DARKGREEN);
+                    DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, GetColor(0x004d00FF));
+                    DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, GREEN);
                 }
                 
                 //DrawRectangle(100, 100, 100, 100, RED);
                 //DrawTriangle((Vector2){200, 100}, (Vector2){250, 75}, (Vector2){100, 100}, BLUE);
                 if(cameraMode == CAMERA_FIRST_PERSON){
-                    DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, GREEN);
-                    DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, DARKGREEN);
+                    DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, GetColor(0x004d00FF));
+                    DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, GREEN);
                 }
                 //DrawSphere((Vector3){0.0f, 0.0f, 0.0f}, 2.0f, BLUE);
                 //DrawSphereWires((Vector3){0.0f, 0.0f, 0.0f}, 2.0f, 20, 20, DARKBLUE);
