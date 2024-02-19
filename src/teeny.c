@@ -1,4 +1,19 @@
 #include "raylib.h"
+#include <stdint.h>
+void wallCollision(Vector3* cubePosition){
+    if(cubePosition->x <= -15.0f){
+            cubePosition->x += 1;
+        }
+        if(cubePosition->x >= 15.0f){
+            cubePosition->x -= 1;
+        }
+        if(cubePosition->z <= -15.0f){
+            cubePosition->z += 1;
+        }        
+        if(cubePosition->z >= 15.0f){
+            cubePosition->z -= 1;
+        }
+}
 void movePlayer(Vector3* cubePosition, int velocity, int cubeJumpHeight){
     
         if (IsKeyDown(KEY_D)) cubePosition->x += velocity;
@@ -6,6 +21,25 @@ void movePlayer(Vector3* cubePosition, int velocity, int cubeJumpHeight){
         if (IsKeyDown(KEY_W)) cubePosition->z -= velocity;
         if (IsKeyDown(KEY_S)) cubePosition->z += velocity;
         if (IsKeyDown(KEY_SPACE)) cubePosition->y += cubeJumpHeight;
+}
+void changeCameraMode(int* cameraMode, Camera3D* camera){ 
+        //switch the camera mode
+        if(IsKeyPressed(KEY_ONE)) {
+            cameraMode = CAMERA_FREE;
+            camera->up = (Vector3){0.0f, 1.0f, 0.0f};
+        }
+        if(IsKeyPressed(KEY_TWO)) {
+            cameraMode = CAMERA_FIRST_PERSON;
+            camera->up = (Vector3){0.0f, 1.0f, 0.0f};
+        }
+        if(IsKeyPressed(KEY_THREE)) {
+            cameraMode = CAMERA_THIRD_PERSON;
+            camera->up = (Vector3){0.0f, 1.0f, 0.0f};
+        }
+        if(IsKeyPressed(KEY_FOUR)) {
+            cameraMode = CAMERA_ORBITAL;
+            camera->up = (Vector3){0.0f, 1.0f, 0.0f};
+        }
 }
 
 int main() {
@@ -42,9 +76,13 @@ int main() {
     while (!WindowShouldClose())
     {
         //switch the camera mode
-        if(IsKeyPressed(KEY_ONE)) {
-            cameraMode = CAMERA_FREE;
-            camera.up = (Vector3){0.0f, 1.0f, 0.0f};
+        //if(IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_FOUR)){
+          //  changeCameraMode(&cameraMode, &camera);
+        //}
+        // || IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_FOUR)
+       if(IsKeyPressed(KEY_ONE)) {
+           cameraMode = CAMERA_FREE;
+           camera.up = (Vector3){0.0f, 1.0f, 0.0f};
         }
         if(IsKeyPressed(KEY_TWO)) {
             cameraMode = CAMERA_FIRST_PERSON;
@@ -80,7 +118,19 @@ int main() {
                 camera.fovy = 60.0f; //near plane width in camera orthographic
             }
         }
-        
+        //if(cubePosition.x <= -15.0f){
+          //  cubePosition.x += 1;
+        //}
+        //if(cubePosition.x >= 15.0f){
+          //  cubePosition.x -= 1;
+        //}
+        //if(cubePosition.z <= -15.0f){
+          //  cubePosition.z += 1;
+        //}        
+        //if(cubePosition.z >= 15.0f){
+          //  cubePosition.z -= 1;
+        //}
+        wallCollision(&cubePosition);
         //Pretty self explanatory but this updates the camera
         UpdateCamera(&camera, cameraMode);
 
