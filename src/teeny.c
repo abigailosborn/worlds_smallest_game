@@ -87,7 +87,9 @@ int main() {
     
     Vector3 bonnieBoxPosition = {-8.0f, 2.5f, 8.0f};
     Vector3 bonnieBoxSize = {16.0f, 5.0f, 1.0f};
-
+    
+    Vector3 bonnieTwoBoxPosition = {8.0f, 2.5f, -8.0f};
+    Vector3 bonnieTwoBoxSize = {16.0f, 5.0f, 1.0f};
     bool collision = false;
 
     //set the fps
@@ -145,7 +147,7 @@ int main() {
         //stop player going through wall
         wallCollision(&cubePosition);
         collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieBoxPosition, &bonnieBoxSize);
-
+        collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieTwoBoxPosition, &bonnieTwoBoxSize);
         //if(CheckCollisionBoxes((BoundingBox){(Vector3){cubePosition.x - playerSize.x / 2,
           //                                             cubePosition.y - playerSize.y / 2,
             //                                           cubePosition.z - playerSize.z / 2},
@@ -187,8 +189,8 @@ int main() {
                 DrawCube((Vector3){16.0f, 2.5f, 0.0f}, 1.0f, 5.0f, 32.0f, PINK);
                 DrawCube((Vector3){0.0f, 2.5f, 16.0f}, 32.0f, 5.0f, 1.0f, YELLOW);
                 DrawCube((Vector3){0.0f, 2.5f, -16.0f}, 32.0f, 5.0f, 1.0f, RED);
-                DrawCube((Vector3){8.0f, 2.5f, -8.0f}, 16.0f, 5.0f, 1.0f, GREEN);
-                DrawCubeWires((Vector3){8.0f, 2.5f, -8.0f}, 16.0f, 5.0f, 1.0f, BLACK);
+                DrawCube(bonnieTwoBoxPosition, bonnieTwoBoxSize.x, bonnieTwoBoxSize.y, bonnieTwoBoxSize.z, GREEN);
+                DrawCubeWires(bonnieTwoBoxPosition, bonnieTwoBoxSize.x, bonnieTwoBoxSize.y, bonnieTwoBoxSize.z, BLACK);
                 DrawCube(bonnieBoxPosition, bonnieBoxSize.x, bonnieBoxSize.y, bonnieBoxSize.z, GREEN);
                 DrawCubeWires(bonnieBoxPosition, bonnieBoxSize.x, bonnieBoxSize.y, bonnieBoxSize.z, BLACK);
                 DrawCylinder((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, GREEN);
