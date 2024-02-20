@@ -14,7 +14,20 @@ void wallCollision(Vector3* cubePosition){
             cubePosition->z -= 1;
         }
 }
-
+bool checkObjectCollision(Vector3* cubePosition, Vector3* playerSize, Vector3* objPosition, Vector3* objSize){
+    if(CheckCollisionBoxes((BoundingBox){(Vector3){cubePosition->x - playerSize->x / 2,
+                                                       cubePosition->y - playerSize->y / 2,
+                                                       cubePosition->z - playerSize->z / 2},
+                                             (Vector3){cubePosition->x + playerSize->z / 2,
+                                                       cubePosition->y + playerSize->z / 2,
+                                                       cubePosition->z + playerSize->z / 2}},
+                              (BoundingBox){(Vector3){objPosition->x - objSize->x / 2,
+                                                      objPosition->y - objSize->y / 2,
+                                                      objPosition->z - objSize->z / 2},
+                                            (Vector3){objPosition->x + objSize->x / 2,
+                                                      objPosition->y + objSize->y / 2,
+                                                      objPosition->z + objSize->z / 2}})) return true;;
+}
 void movePlayer(Vector3* cubePosition, int velocity, int cubeJumpHeight){
     
         if (IsKeyDown(KEY_D)) cubePosition->x += velocity;
@@ -67,8 +80,15 @@ int main() {
     
     //set position and other necesities for the cube 
     Vector3 cubePosition = {0.0f, 1.0f, 0.0f};
+    Vector3 playerSize = {2.0f, 2.0f, 2.0f};
+    Color playerColor = GetColor(0x004d00FF);
     int cubeJumpHeight = 1.0f;
     int velocity = 1.0f;
+    
+    Vector3 bonnieBoxPosition = {-8.0f, 2.5f, 8.0f};
+    Vector3 bonnieBoxSize = {16.0f, 5.0f, 1.0f};
+
+    bool collision = false;
 
     //set the fps
     SetTargetFPS(60);
@@ -81,6 +101,9 @@ int main() {
           //  changeCameraMode(&cameraMode, &camera);
         //}
         // || IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_FOUR)
+       //set starting position to false
+       collision = false;
+
        if(IsKeyPressed(KEY_ONE)) {
            cameraMode = CAMERA_FREE;
            camera.up = (Vector3){0.0f, 1.0f, 0.0f};
@@ -117,21 +140,26 @@ int main() {
                 camera.target = (Vector3){0.0f, 2.0f, 0.0f};
                 camera.projection = CAMERA_PERSPECTIVE;
                 camera.fovy = 60.0f; //near plane width in camera orthographic
-            }
+            } 
         }
-        //if(cubePosition.x <= -15.0f){
-          //  cubePosition.x += 1;
-        //}
-        //if(cubePosition.x >= 15.0f){
-          //  cubePosition.x -= 1;
-        //}
-        //if(cubePosition.z <= -15.0f){
-          //  cubePosition.z += 1;
-        //}        
-        //if(cubePosition.z >= 15.0f){
-          //  cubePosition.z -= 1;
-        //}
+        //stop player going through wall
         wallCollision(&cubePosition);
+        collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieBoxPosition, &bonnieBoxSize);
+
+        //if(CheckCollisionBoxes((BoundingBox){(Vector3){cubePosition.x - playerSize.x / 2,
+          //                                             cubePosition.y - playerSize.y / 2,
+            //                                           cubePosition.z - playerSize.z / 2},
+              //                               (Vector3){cubePosition.x + playerSize.z / 2,
+                //                                       cubePosition.y + playerSize.z / 2,
+                  //                                     cubePosition.z + playerSize.z / 2}},
+                    //          (BoundingBox){(Vector3){bonnieBoxPosition.x - bonnieBoxSize.x / 2,
+                      //                                bonnieBoxPosition.y - bonnieBoxSize.y / 2,
+                        //                              bonnieBoxPosition.z - bonnieBoxSize.z / 2},
+                          //                  (Vector3){bonnieBoxPosition.x + bonnieBoxSize.x / 2,
+                            //                          bonnieBoxPosition.y + bonnieBoxSize.y / 2,
+                              //                        bonnieBoxPosition.z + bonnieBoxSize.z / 2}})) collision = true;
+        if(collision) playerColor = RED;
+        else playerColor =  GetColor(0x004d00FF);
         //Pretty self explanatory but this updates the camera
         UpdateCamera(&camera, cameraMode);
 
@@ -161,20 +189,20 @@ int main() {
                 DrawCube((Vector3){0.0f, 2.5f, -16.0f}, 32.0f, 5.0f, 1.0f, RED);
                 DrawCube((Vector3){8.0f, 2.5f, -8.0f}, 16.0f, 5.0f, 1.0f, GREEN);
                 DrawCubeWires((Vector3){8.0f, 2.5f, -8.0f}, 16.0f, 5.0f, 1.0f, BLACK);
-                DrawCube((Vector3){-8.0f, 2.5f, 8.0f}, 16.0f, 5.0f, 1.0f, GREEN);
-                DrawCubeWires((Vector3){-8.0f, 2.5f, 8.0f}, 16.0f, 5.0f, 1.0f, BLACK);
+                DrawCube(bonnieBoxPosition, bonnieBoxSize.x, bonnieBoxSize.y, bonnieBoxSize.z, GREEN);
+                DrawCubeWires(bonnieBoxPosition, bonnieBoxSize.x, bonnieBoxSize.y, bonnieBoxSize.z, BLACK);
                 DrawCylinder((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, GREEN);
                 DrawCylinderWires((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, BLACK);
                 if(cameraMode == CAMERA_THIRD_PERSON){
-                    DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, GetColor(0x004d00FF));
-                    DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, GREEN);
+                    DrawCube(cubePosition, playerSize.x, playerSize.y, playerSize.z, playerColor);
+                    DrawCubeWires(cubePosition, playerSize.x, playerSize.y, playerSize.z, GREEN);
                 }
                 
                 //DrawRectangle(100, 100, 100, 100, RED);
                 //DrawTriangle((Vector2){200, 100}, (Vector2){250, 75}, (Vector2){100, 100}, BLUE);
                 if(cameraMode == CAMERA_FIRST_PERSON){
-                    DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, GetColor(0x004d00FF));
-                    DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, GREEN);
+                    DrawCube(cubePosition, playerSize.x, playerSize.y, playerSize.z, playerColor);
+                    DrawCubeWires(cubePosition, playerSize.x, playerSize.y, playerSize.z, GREEN);
                 }
                 //DrawSphere((Vector3){0.0f, 0.0f, 0.0f}, 2.0f, BLUE);
                 //DrawSphereWires((Vector3){0.0f, 0.0f, 0.0f}, 2.0f, 20, 20, DARKBLUE);
