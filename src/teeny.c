@@ -90,6 +90,9 @@ int main() {
     
     Vector3 bonnieTwoBoxPosition = {8.0f, 2.5f, -8.0f};
     Vector3 bonnieTwoBoxSize = {16.0f, 5.0f, 1.0f};
+
+    Vector3 cylinderPosition = {-10.0f, 0.0f, 2.0f};
+    Vector3 cylinderSize = {2.0f, 2.0f, 2.5f};
     bool collision = false;
 
     //set the fps
@@ -146,62 +149,55 @@ int main() {
         }
         //stop player going through wall
         wallCollision(&cubePosition);
-        collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieBoxPosition, &bonnieBoxSize);
-        collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieTwoBoxPosition, &bonnieTwoBoxSize);
-        //if(CheckCollisionBoxes((BoundingBox){(Vector3){cubePosition.x - playerSize.x / 2,
-          //                                             cubePosition.y - playerSize.y / 2,
-            //                                           cubePosition.z - playerSize.z / 2},
-              //                               (Vector3){cubePosition.x + playerSize.z / 2,
-                //                                       cubePosition.y + playerSize.z / 2,
-                  //                                     cubePosition.z + playerSize.z / 2}},
-                    //          (BoundingBox){(Vector3){bonnieBoxPosition.x - bonnieBoxSize.x / 2,
-                      //                                bonnieBoxPosition.y - bonnieBoxSize.y / 2,
-                        //                              bonnieBoxPosition.z - bonnieBoxSize.z / 2},
-                          //                  (Vector3){bonnieBoxPosition.x + bonnieBoxSize.x / 2,
-                            //                          bonnieBoxPosition.y + bonnieBoxSize.y / 2,
-                              //                        bonnieBoxPosition.z + bonnieBoxSize.z / 2}})) collision = true;
-        if(collision) playerColor = RED;
+        //collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieBoxPosition, &bonnieBoxSize);
+        //collision = checkObjectCollision(&cubePosition, &playerSize, &bonnieTwoBoxPosition, &bonnieTwoBoxSize);
+        if(checkObjectCollision(&cubePosition, &playerSize, &bonnieBoxPosition, &bonnieBoxSize) 
+           || checkObjectCollision(&cubePosition, &playerSize, &bonnieTwoBoxPosition, &bonnieTwoBoxSize)
+           || checkObjectCollision(&cubePosition, &playerSize, &cylinderPosition, &cylinderSize)){
+            playerColor = RED;
+        }
+        //if(collision) playerColor = RED;
         else playerColor =  GetColor(0x004d00FF);
         //Pretty self explanatory but this updates the camera
         UpdateCamera(&camera, cameraMode);
 
-        //if (IsKeyDown(KEY_D)) cubePosition.x += velocity;
-        //if (IsKeyDown(KEY_A)) cubePosition.x -= velocity;
-        //if(IsKeyDown(KEY_W)) cubePosition.z -= velocity;
-        //if(IsKeyDown(KEY_S)) cubePosition.z += velocity;
-        //if(IsKeyDown(KEY_SPACE)) cubePosition.y += cubeJumpHeight;
+        //move the player appropriately for third or first person perspectives
         if(cameraMode == CAMERA_THIRD_PERSON){
             movePlayer(&cubePosition, velocity, cubeJumpHeight);
         }       
         if(cameraMode == CAMERA_FIRST_PERSON){
             if(IsKeyDown(KEY_SPACE)) camera.position.y += 1.0f;
         }
+        //woooo time to draw things
         BeginDrawing();
-
+            //set background color
             ClearBackground(GetColor(0x2e1038FF));
- 
+            //make text on the screen
             DrawText("Move Cube Using Arrow Keys", (screenWidth / 4), 40, 20, GetColor(0xe5c7efFF));            
-
+            //Turn on 3d mode THINGS IN HERE MUST ONLY BE 3D
             BeginMode3D(camera);
-                
+                //The walls and floor
                 DrawPlane((Vector3){0.0f, 0.0f, 0.0f}, (Vector2){32.0f, 32.0f}, LIGHTGRAY);
                 DrawCube((Vector3){-16.0f, 2.5f, 0.0f}, 1.0f, 5.0f, 32.0f, BLUE);
                 DrawCube((Vector3){16.0f, 2.5f, 0.0f}, 1.0f, 5.0f, 32.0f, PINK);
                 DrawCube((Vector3){0.0f, 2.5f, 16.0f}, 32.0f, 5.0f, 1.0f, YELLOW);
                 DrawCube((Vector3){0.0f, 2.5f, -16.0f}, 32.0f, 5.0f, 1.0f, RED);
+
+                //TODO: put all objects within the level (including walls) in an array, that way you can iterate over that array
+                //to check for object collisions
+
+                //objects and player in the area 
                 DrawCube(bonnieTwoBoxPosition, bonnieTwoBoxSize.x, bonnieTwoBoxSize.y, bonnieTwoBoxSize.z, GREEN);
                 DrawCubeWires(bonnieTwoBoxPosition, bonnieTwoBoxSize.x, bonnieTwoBoxSize.y, bonnieTwoBoxSize.z, BLACK);
                 DrawCube(bonnieBoxPosition, bonnieBoxSize.x, bonnieBoxSize.y, bonnieBoxSize.z, GREEN);
                 DrawCubeWires(bonnieBoxPosition, bonnieBoxSize.x, bonnieBoxSize.y, bonnieBoxSize.z, BLACK);
-                DrawCylinder((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, GREEN);
-                DrawCylinderWires((Vector3){-10.0f, 0.0f, 2.0f}, 1.0f, 3.0f, 2.5f, 30, BLACK);
+                DrawCylinder(cylinderPosition, cylinderSize.x, cylinderSize.y, cylinderSize.z, 30, GREEN);
+                DrawCylinderWires(cylinderPosition, cylinderSize.x, cylinderSize.y, cylinderSize.z, 30, BLACK);
                 if(cameraMode == CAMERA_THIRD_PERSON){
                     DrawCube(cubePosition, playerSize.x, playerSize.y, playerSize.z, playerColor);
                     DrawCubeWires(cubePosition, playerSize.x, playerSize.y, playerSize.z, GREEN);
                 }
                 
-                //DrawRectangle(100, 100, 100, 100, RED);
-                //DrawTriangle((Vector2){200, 100}, (Vector2){250, 75}, (Vector2){100, 100}, BLUE);
                 if(cameraMode == CAMERA_FIRST_PERSON){
                     DrawCube(cubePosition, playerSize.x, playerSize.y, playerSize.z, playerColor);
                     DrawCubeWires(cubePosition, playerSize.x, playerSize.y, playerSize.z, GREEN);
@@ -212,7 +208,8 @@ int main() {
                 DrawGrid(32, 1.0f);
 
             EndMode3D();
-
+            
+            //write to the screen what perspective and pov the player is in 
             DrawRectangle(600, 5, 195, 100, Fade(SKYBLUE, 0.5f));
             DrawRectangleLines(600, 5, 195, 100, BLUE);
 
