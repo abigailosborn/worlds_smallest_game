@@ -108,7 +108,7 @@ int main() {
         // || IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_FOUR)
        //set starting position to false
        collision = false;
-
+       //camera.projection = CAMERA_ORTHOGRAPHIC;
        if(IsKeyPressed(KEY_ONE)) {
            cameraMode = CAMERA_FREE;
            camera.up = (Vector3){0.0f, 1.0f, 0.0f};
@@ -173,7 +173,7 @@ int main() {
             //set background color
             ClearBackground(GetColor(0x2e1038FF));
             //make text on the screen
-            DrawText("Move Cube Using Arrow Keys", (screenWidth / 4), 40, 20, GetColor(0xe5c7efFF));            
+            DrawText("Start By Pressing P", (screenWidth / 4), 40, 20, GetColor(0xe5c7efFF));            
             //Turn on 3d mode THINGS IN HERE MUST ONLY BE 3D
             BeginMode3D(camera);
                 //The walls and floor
