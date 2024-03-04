@@ -94,7 +94,9 @@ int main() {
     Vector3 cylinderPosition = {-10.0f, 0.0f, 2.0f};
     Vector3 cylinderSize = {2.0f, 2.0f, 2.5f};
     bool collision = false;
-
+    
+    //add texture
+    Texture2D cubeTexture = LoadTexture("images/cubeTexture.png"); 
     //set the fps
     SetTargetFPS(60);
     
@@ -224,6 +226,8 @@ int main() {
 
         EndDrawing();
     }
+    
+    UnloadTexture(cubeTexture);
 
     CloseWindow();
 

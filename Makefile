@@ -12,5 +12,8 @@ $(B)teeny: $(B)teeny.o
 $(B)teeny.o: $(S)teeny.c
 	gcc -c $< $(FLAGS) -o $@
 
+sprite_animation_test: 
+	gcc sprite_animation_test.c $(FLAGS) -o $@
+
 clean:
 	rm -rf build
