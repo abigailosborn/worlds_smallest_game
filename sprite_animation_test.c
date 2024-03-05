@@ -11,8 +11,8 @@ int main(void){
     
     Vector2 position = {350.0f, 280.0f};
 
-    Texture2D frog = LoadTexture("Pictures/frog.png");
-    Rectangle frameRec = {0.0f, 0.0f, (float)frog.width/5, (float)frog.height};
+    Texture2D frog = LoadTexture("Pictures/cat.png");
+    Rectangle frameRec = {0.0f, 0.0f, (float)frog.width/13, (float)frog.height};
     
     int currentFrame = 0;
     int framesCounter = 0;
@@ -26,8 +26,8 @@ int main(void){
             framesCounter = 0;
             currentFrame++;
         
-            if(currentFrame > 4) currentFrame = 0;
-            frameRec.x = (float)currentFrame*(float)frog.width/5;
+            if(currentFrame > 12) currentFrame = 0;
+            frameRec.x = (float)currentFrame*(float)frog.width/13;
         }
         
         if(IsKeyPressed(KEY_RIGHT)) framesSpeed++;
